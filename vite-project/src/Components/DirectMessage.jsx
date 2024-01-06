@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Avatar, Divider, List, Skeleton } from 'antd';
-import { FontSizeOutlined, PlusSquareTwoTone } from '@ant-design/icons'
+import { PlusSquareTwoTone } from '@ant-design/icons'
+import { useContext } from 'react';
+import { UserContext } from '../Context/UserContext';
 
 const Boxmessage = () => {
+    const { setUser } = useContext(UserContext)
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
@@ -36,8 +39,8 @@ const Boxmessage = () => {
             <div
                 id="scrollableDiv"
                 style={{
-                    height: 320,
-                    overflow: 'auto',
+                    height: 250,
+                    overflowY: 'auto',
                     padding: '0 16px',
                     borderBottom: '1px solid rgba(140, 140, 140, 0.35)',
                 }}
@@ -61,10 +64,10 @@ const Boxmessage = () => {
                     <List
                         dataSource={data}
                         renderItem={(item) => (
-                            <List.Item key={item.email}>
+                            <List.Item key={item.email} onClick={() => setUser(item)}>
                                 <List.Item.Meta
                                     avatar={<Avatar src={item.picture.large} />}
-                                    title={<a href="https://ant.design">{item.name.last}</a>}
+                                    title={item.name.last}
                                     description={<p>Hey ! What's up bro ?</p>}
                                 />
                             </List.Item>

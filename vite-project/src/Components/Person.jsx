@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import VirtualList from 'rc-virtual-list';
 import { Avatar, List, message } from 'antd';
 import OptionBtn from '../Widgets.jsx/OptionBtn'
 import { DeleteOutlined, EditOutlined, CloseCircleOutlined } from '@ant-design/icons'
+import { UserContext } from '../Context/UserContext';
 
-const fakeDataUrl ='https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo';
-const ContainerHeight = 830;
+const fakeDataUrl = 'https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo';
+const ContainerHeight = 500;
 
 const Person = () => {
+    const { setUser } = useContext(UserContext)
     const [data, setData] = useState([]);
 
     const items = [
@@ -55,10 +57,10 @@ const Person = () => {
                 onScroll={onScroll}
             >
                 {(item) => (
-                    <List.Item key={item.email}>
+                    <List.Item key={item.email} onClick={() => setUser(item)}>
                         <List.Item.Meta
                             avatar={<Avatar src={item.picture.large} />}
-                            title={<a href="https://ant.design">{item.name.last}</a>}
+                            title={item.name.last}
                         />
                         <OptionBtn color={"black"} items={items} />
                     </List.Item>

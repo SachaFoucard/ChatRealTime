@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Collapse } from 'antd';
-import { CiOutlined } from '@ant-design/icons'
+import { Select, Switch } from 'antd';
 
 const { Panel } = Collapse;
 
 const MyForm = () => {
     const [form] = Form.useForm();
     const [editMode, setEditMode] = useState(false);
+    const [placement, SetPlacement] = useState('bottomRight');
+
+    const onChange = (checked) => {
+        console.log(`switch to ${checked}`);
+    };
 
     const initialValues = {
         name: 'Sacha Foucard',
@@ -120,6 +125,105 @@ const MyForm = () => {
             <Collapse accordion>
                 <Panel header="Privacy" key="2" >
                     <h5>Who can see my personal info</h5>
+                    <div className='profil-photo flx'>
+                        <p>Profile photo</p>
+                        <Select size="small"
+                            defaultValue="Everyone"
+                            style={{
+                                width: 120,
+                            }}
+                            placement={placement}
+                            options={[
+                                {
+                                    value: 'Everyone',
+                                    label: 'Everyone',
+                                },
+                                {
+                                    value: 'Selected',
+                                    label: 'Selected ',
+                                },
+                                {
+                                    value: 'Nobody',
+                                    label: 'Nobody',
+                                },
+                            ]}
+                        />
+                    </div>
+                    <div className='profil-status flx'>
+                        <p>Status</p>
+                        <Select size="small"
+                            defaultValue="Everyone"
+                            style={{
+                                width: 120,
+                            }}
+                            placement={placement}
+                            options={[
+                                {
+                                    value: 'Everyone',
+                                    label: 'Everyone',
+                                },
+                                {
+                                    value: 'Selected',
+                                    label: 'Selected ',
+                                },
+                                {
+                                    value: 'Nobody',
+                                    label: 'Nobody',
+                                },
+                            ]}
+                        />
+                    </div>
+                    <div className='profile-group flx'>
+                        <p>Groups</p>
+                        <Select size="small"
+                            defaultValue="Everyone"
+                            style={{
+                                width: 120,
+                            }}
+                            placement={placement}
+                            options={[
+                                {
+                                    value: 'Everyone',
+                                    label: 'Everyone',
+                                },
+                                {
+                                    value: 'Selected',
+                                    label: 'Selected ',
+                                },
+                                {
+                                    value: 'Nobody',
+                                    label: 'Nobody',
+                                },
+                            ]}
+                        />
+                    </div>
+                    <div className='last-seen flx'>
+                        <p>Last seen</p>
+                        <Switch size='small' defaultChecked onChange={onChange} />
+                    </div>
+                    <div className='Read-receipts flx'>
+                        <p>Read receipts</p>
+                        <Switch size='small' defaultChecked onChange={onChange} />
+                    </div>
+
+
+                </Panel>
+            </Collapse>
+            <Collapse accordion>
+                <Panel header="Security" key="3" >
+                    <div className='security flx'>
+                        <p>Show security notification</p>
+                        <Switch size='small' defaultChecked onChange={onChange} />
+                    </div>
+                </Panel>
+            </Collapse>
+            <Collapse accordion>
+                <Panel header="Help" key="4">
+                    <div className='help-link'>
+                    <p>FAQs</p>
+                    <p>Contact</p>
+                    <p>Terms & Privacy policy</p>
+                    </div>
                 </Panel>
             </Collapse>
         </>

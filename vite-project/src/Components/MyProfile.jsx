@@ -10,7 +10,7 @@ export default function MyProfile() {
   const userData = [
     { value: 'Sacha Foucard', icon: <UserOutlined /> },
     { value: '+1234567890', icon: <PhoneOutlined /> },
-    { value: 'sachafoucard8@example.com', icon: <MailOutlined /> },
+    { value: 'sachafou@gmail.com', icon: <MailOutlined /> },
     { value: 'Ramat Gan, Israel', icon: <EnvironmentOutlined /> },
   ];
 

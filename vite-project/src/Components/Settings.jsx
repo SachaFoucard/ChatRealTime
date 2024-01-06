@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { EditOutlined } from '@ant-design/icons'
-import img from '../assets/backgroundProfilSetting.jpg'
+import img from '../assets/backgroundProfile.jpg'
 import ProfilePicture from '../Widgets.jsx/ProfilePicture'
 import Mode from '../Widgets.jsx/Mode'
 import MyForm from './MyForm'

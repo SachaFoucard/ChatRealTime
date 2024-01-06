@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Avatar, Divider, List, Skeleton } from 'antd';
+import { useContext } from 'react';
+import { UserContext } from '../Context/UserContext';
 
 const FavoritesMess = () => {
+    const { setUser } = useContext(UserContext);
+
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
-    const loadMoreData = () => {
+    const loadMoreData = async () => {
         if (loading) {
             return;
         }
@@ -14,7 +18,7 @@ const FavoritesMess = () => {
         fetch('https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo')
             .then((res) => res.json())
             .then((body) => {
-                setData([...data, ...body.results]);
+                setData(body.results);
                 setLoading(false);
             })
             .catch(() => {
@@ -28,11 +32,11 @@ const FavoritesMess = () => {
 
     return (
         <>
-        <h4 className='title-fav'>Favorites</h4>
+            <h4 className='title-fav'>Favorites</h4>
             <div
                 id="scrollableDiv"
                 style={{
-                    height: 400,
+                    height: 250,
                     overflow: 'auto',
                     padding: '0 16px',
                     borderBottom: '1px solid rgba(140, 140, 140, 0.35)',
@@ -57,10 +61,10 @@ const FavoritesMess = () => {
                     <List
                         dataSource={data}
                         renderItem={(item) => (
-                            <List.Item key={item.email}>
+                            <List.Item key={item.email} onClick={() => setUser(item)}>
                                 <List.Item.Meta
                                     avatar={<Avatar src={item.picture.large} />}
-                                    title={<a href="https://ant.design">{item.name.last}</a>}
+                                    title={item.name.last}
                                     description={item.email}
                                 />
                             </List.Item>
@@ -71,4 +75,5 @@ const FavoritesMess = () => {
         </>
     );
 };
+
 export default FavoritesMess;

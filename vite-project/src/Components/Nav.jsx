@@ -1,13 +1,14 @@
-// Nav.js
-
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { UserOutlined, MessageOutlined, ContactsOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Avatar } from 'antd';
-import { useContext } from 'react';
+import { Avatar, Menu } from 'antd';
 import { UserContext } from '../Context/UserContext';
 
+const { SubMenu } = Menu;
+
 export default function Nav() {
-    const [icons, setIcons] = useState([
+    const { selectedFeature, setSelectedFeature } = useContext(UserContext);
+
+    const icons = [
         {
             IconName: <UserOutlined />,
             Component: 'Profile'
@@ -24,18 +25,15 @@ export default function Nav() {
             IconName: <SettingOutlined />,
             Component: 'Settings'
         }
-    ]);
-
-    const {selectedFeature,setSelectedFeature} = useContext(UserContext)
-
+    ];
 
     return (
         <div className='Nav-container'>
-            <div className='Icons-list column'>
+            <Menu mode="vertical" theme="dark">
                 {icons.map((icon, index) => (
-                    <Button  key={index} shape="circle" icon={icon.IconName} onClick={() => setSelectedFeature(icon.Component)} />
+                    <Menu.Item key={index} icon={icon.IconName} onClick={() => setSelectedFeature(icon.Component)} />
                 ))}
-            </div>
+            </Menu>
             <div className='IconProfil'>
                 <Avatar className='avatar' size={64} icon={<UserOutlined />} />
             </div>
