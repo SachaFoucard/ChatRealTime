@@ -5,10 +5,9 @@ import SearchWord from '../Widgets.jsx/Nav/SearchWord'
 import Call from '../Widgets.jsx/Nav/Call'
 import Video from '../Widgets.jsx/Nav/Video'
 import OptionBtn from '../Widgets.jsx/OptionBtn'
-import InfoUser from './InfoUser'
 
 export default function NavUser() {
-    const { user } = useContext(UserContext)
+    const { user, openInfo, setOpenInfo } = useContext(UserContext)
 
     const items = [
         {
@@ -28,7 +27,6 @@ export default function NavUser() {
         }
     ]
 
-    const { openInfo, setOpenInfo } = useContext(UserContext)
 
 
     useEffect(() => {
@@ -38,7 +36,7 @@ export default function NavUser() {
 
     return (
         <>
-            <div id='bar-user' className='bar-user' style={{ display: 'grid', gridTemplateColumns: openInfo ? "1fr 1fr 1.5fr" : "1fr 1fr" }}>
+            <div id='bar-user' className='bar-user' style={{display: 'flex',width: openInfo ? '100%' : '1000px' }}>
                 <div className='dicussions-profil-user'>
                     <img src={user?.picture?.large} />
                     <div className='name-status'>
@@ -49,7 +47,7 @@ export default function NavUser() {
                 <div className='dicussions-profil-nav'>
                     <ul>
                         <li><SearchWord /></li>
-                        <li><Call  /></li>
+                        <li><Call /></li>
                         <li><Video /></li>
                         <li><InboxOutlined style={{ fontSize: 18, color: 'grey' }} /></li>
                         <li ><InfoCircleFilled onClick={() => setOpenInfo(!openInfo)} style={{ fontSize: 18, color: 'grey' }} /></li>
@@ -57,8 +55,7 @@ export default function NavUser() {
                         <li><SettingTwoTone spin="true" twoToneColor="green" style={{ fontSize: 18 }} /></li>
                     </ul>
                 </div>
-                {openInfo ? <InfoUser user={user} /> : null}
-            </div>
+            </div >
         </>
     )
 }

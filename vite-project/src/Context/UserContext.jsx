@@ -23,7 +23,7 @@ export default function UserContextProvider({ children }) {
   }
   ); // click on user message 
 
-  const [openInfo, setOpenInfo] = useState(true)
+  const [openInfo, setOpenInfo] = useState(false)
   // toggle Open/Close the feature User-info on the right page
 
 

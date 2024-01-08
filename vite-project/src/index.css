@@ -192,6 +192,13 @@ body {
   flex: 1;
   /* Distribute available space equally */
 }
+.dicussions-messages{
+  display: block;
+  flex-direction: column;
+}
+.popo{
+  display: flex;
+}
 
 .dicussions-profil-user {
   display: flex;
