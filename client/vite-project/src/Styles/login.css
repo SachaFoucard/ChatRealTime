@@ -1,0 +1,27 @@
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-image: url('../assets/6938839_3409297.jpg'); /* Use url() to specify the background image */
+    width: 100%;
+  }
+  
+  
+  .login-content {
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    padding: 100px;
+    border-radius: 8px;
+  }
+  
+  .login-form {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  /* Add more styles as needed */
+  
