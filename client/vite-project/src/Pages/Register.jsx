@@ -1,13 +1,48 @@
-import React from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import React, { useState } from 'react';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import '../Styles/login.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const onFinish = (values) => {
+  const navigate = useNavigate()
+
+  const onFinish = async (values) => {
     console.log('Received values:', values);
+
+    try {
+      const response = await fetch('http://localhost:8000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mail: values?.email,
+          password1: values?.password,
+          username: values?.username,
+          password2: values?.confirmPassword
+        }),
+      });
+
+      const data = await response.json();
+      console.log('data', data);
+
+      if (response.status === 201) {
+        message.success('Registration successful');
+        navigate('/')
+      } else {
+        message.error('User already exists or passwords do not match');
+        console.error('Register failed', data);
+        // Handle login failure, show error message, etc.
+      }
+    } catch (error) {
+      message.error('User already exists or passwords do not match');
+      console.error('Login error', error);
+      // Handle unexpected errors
+    }
   };
+
+  const [alert, setAlert] = useState(false)
 
   return (
     <div className="login-container">

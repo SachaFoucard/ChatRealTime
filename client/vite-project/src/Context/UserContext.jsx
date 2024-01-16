@@ -26,6 +26,8 @@ export default function UserContextProvider({ children }) {
   const [openInfo, setOpenInfo] = useState(false)
   // toggle Open/Close the feature User-info on the right page
 
+  const [me, setMe] = useState({})
+
 
   const value = {
     selectedFeature,
@@ -33,7 +35,8 @@ export default function UserContextProvider({ children }) {
     user,
     setUser,
     setOpenInfo,
-    openInfo
+    openInfo,
+    setMe
   }
 
   return (
