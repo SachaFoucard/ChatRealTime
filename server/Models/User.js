@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 
 // Define the schema for the User
 const userSchema = new mongoose.Schema({
+    gender: {
+        type: Boolean,
+        required: false
+    },
     description: {
         type: String,
         required: false,
@@ -53,14 +57,14 @@ const userSchema = new mongoose.Schema({
         require: false
     },
     contacts: {
-        type: Array,
+        type: [mongoose.Types.ObjectId],
         require: false
     },
     favMessages: {
         type: Array,
         require: false
     },
-    jobTitle:{
+    jobTitle: {
         type: String,
         required: false
     }

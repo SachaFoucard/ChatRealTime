@@ -129,8 +129,39 @@ route.get('/favoritesContacts/:id', async (req, res) => {
   }
 });
 
-route.post('/addContact', async (req, res) => {
+//get all contacts from user1
+route.get('getContacts/:id', async (req, res) => {
+  const { user1 } = req.params.id;
 
+  try {
+    const user = await User.findOne(user1);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const Allcontacts = [];
+
+    const favContacts = user.contacts || [];
+    for (let i = 0; i < favContacts.length; i++) {
+      const user = await User.findOne({ _id: favContacts[i]._id });
+      Allcontacts.push(user)
+    }
+
+    return res.status(200).json({ Allcontacts });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+})
+
+route.get('/searchUser/:input', async (req, res) => {
+  const { input } = req.params
+  const users = await User.findOne({ mail: input });
+  if (users) {
+    res.status(201).json(users);
+  }
+  else {
+    res.status(404).json('any users in database with the name' + input)
+  }
 })
 
 module.exports = route;

@@ -4,11 +4,13 @@ import { Avatar, Divider, List, Skeleton } from 'antd';
 import { PlusSquareTwoTone } from '@ant-design/icons'
 import { useContext } from 'react';
 import { UserContext } from '../Context/UserContext';
+import ModalAddContact from '../Widgets.jsx/ModalAddContact';
 
 const Boxmessage = () => {
     const { setUser } = useContext(UserContext)
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
     const loadMoreData = () => {
         if (loading) {
@@ -26,6 +28,10 @@ const Boxmessage = () => {
             });
     };
 
+    const handleSquareIconClick = () => {
+        setIsModalVisible(true); // Show the modal when the square icon is clicked
+    };
+
     useEffect(() => {
         loadMoreData();
     }, []);
@@ -34,7 +40,7 @@ const Boxmessage = () => {
         <>
             <div className='Header-add-discussion'>
                 <h6 className='title-Mess'>Direct Message</h6>
-                <PlusSquareTwoTone style={{ fontSize: 30, border: 10, borderColor: 'green' }} />
+                <PlusSquareTwoTone onClick={handleSquareIconClick} style={{ fontSize: 30, border: 10, borderColor: 'green' }} />
             </div>
             <div
                 id="scrollableDiv"
@@ -75,6 +81,7 @@ const Boxmessage = () => {
                     />
                 </InfiniteScroll>
             </div>
+            <ModalAddContact isVisible={isModalVisible} setIsVisible={setIsModalVisible} />
         </>
     );
 };
