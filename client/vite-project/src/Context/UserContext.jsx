@@ -38,6 +38,7 @@ export default function UserContextProvider({ children }) {
     setMe,
     me
   }
+
   useEffect(() => {
     const storedUserData = localStorage.getItem('userData');
     const initialUserData = storedUserData ? JSON.parse(storedUserData) : null;

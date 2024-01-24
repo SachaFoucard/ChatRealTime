@@ -35,7 +35,7 @@ const DirectMessage = () => {
 
     useEffect(() => {
         loadMoreData();
-    }, [data]);
+    }, [data.length]);
 
     return (
         <>

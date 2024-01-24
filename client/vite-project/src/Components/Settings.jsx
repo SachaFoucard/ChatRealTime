@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { EditOutlined } from '@ant-design/icons'
 import img from '../assets/backgroundProfile.jpg'
 import ProfilePicture from '../Widgets.jsx/ProfilePicture'
 import Mode from '../Widgets.jsx/Mode'
 import MyForm from './MyForm'
+import { UserContext } from '../Context/UserContext'
 
 export default function Settings() {
-
+  const { me } = useContext(UserContext)
   const [file, setFile] = useState(null);
 
   const handleChange = (e) => {
@@ -44,7 +45,7 @@ export default function Settings() {
           <div className='profile-infos'>
             <ProfilePicture />
             <div className='profile-text'>
-              <h2>Sacha Foucard</h2>
+              <h2>{me?.username}</h2>
               <Mode />
             </div>
           </div>

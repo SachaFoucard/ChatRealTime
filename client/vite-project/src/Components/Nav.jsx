@@ -26,6 +26,7 @@ export default function Nav() {
             Component: 'Settings'
         }
     ];
+ 
 
     return (
         <div className='Nav-container'>
