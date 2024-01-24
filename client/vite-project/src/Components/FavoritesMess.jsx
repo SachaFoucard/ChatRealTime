@@ -6,7 +6,7 @@ import { UserContext } from '../Context/UserContext';
 import { PlusSquareTwoTone } from '@ant-design/icons'
 
 const FavoritesMess = () => {
-    const { setUser, me, user } = useContext(UserContext);
+    const { setUser, me } = useContext(UserContext);
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);

@@ -130,8 +130,8 @@ route.get('/favoritesContacts/:id', async (req, res) => {
 });
 
 //get all contacts from user1
-route.get('getContacts/:id', async (req, res) => {
-  const { user1 } = req.params.id;
+route.get('/getContacts/:id', async (req, res) => {
+  const { id:user1 } = req.params.id;
 
   try {
     const user = await User.findOne(user1);
@@ -142,7 +142,7 @@ route.get('getContacts/:id', async (req, res) => {
 
     const favContacts = user.contacts || [];
     for (let i = 0; i < favContacts.length; i++) {
-      const user = await User.findOne({ _id: favContacts[i]._id });
+      const user = await User.findOne({ _id: favContacts[i]?._id });
       Allcontacts.push(user)
     }
 
@@ -163,6 +163,37 @@ route.get('/searchUser/:input', async (req, res) => {
     res.status(404).json('any users in database with the name' + input)
   }
 })
+
+route.post('/addContact/:id', async (req, res) => {
+  const { user2 } = req.body;
+  // Extract 'id' property from req.params
+  const { id: userId } = req.params;
+
+  try {
+    const user1Instance = await User.findOne({ _id: userId, contacts: { $in: [user2] } });
+    console.log(user1Instance);
+
+    if (user1Instance) {
+      return res.status(200).json({ message: 'Hi User1, sorry but User2 is already in your contacts' });
+    } else {
+      const userToUpdate = await User.findOne({ _id: userId });
+      if (!userToUpdate) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Ensure that favContacts is an array before pushing
+      userToUpdate.contacts = userToUpdate.contacts || [];
+      userToUpdate.contacts.push(user2);
+
+      await userToUpdate.save();
+
+      return res.status(200).json(userToUpdate);
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 module.exports = route;
 

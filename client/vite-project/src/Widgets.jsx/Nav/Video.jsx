@@ -43,7 +43,7 @@ const VideoCall = ({ user }) => {
       <VideoCameraOutlined onClick={handlePhoneIconClick} style={{ fontSize: 18, color: 'grey' }} />
       <Modal
         centered
-        visible={modalOpen}
+        open={modalOpen}
         footer={null}
         onCancel={handleEndCall}
         width={(500)}

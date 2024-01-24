@@ -48,7 +48,7 @@ const Call = () => {
             <PhoneFilled onClick={handlePhoneIconClick} style={{ fontSize: 18, color: 'grey' }} />
             <Modal
                 centered
-                visible={modal2Open}
+                open={modal2Open}
                 footer={null}
                 onCancel={handleModalCancel}
             >

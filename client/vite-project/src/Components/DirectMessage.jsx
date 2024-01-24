@@ -4,28 +4,29 @@ import { Avatar, Divider, List, Skeleton } from 'antd';
 import { PlusSquareTwoTone } from '@ant-design/icons'
 import { useContext } from 'react';
 import { UserContext } from '../Context/UserContext';
-import ModalAddContact from '../Widgets.jsx/ModalAddContact';
+import ModalAddContact from '../Widgets.jsx/ModalAddContact'
 
-const Boxmessage = () => {
-    const { setUser } = useContext(UserContext)
+const DirectMessage = () => {
+    const { setUser,me } = useContext(UserContext)
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
-    const loadMoreData = () => {
+    const loadMoreData = async () => {
         if (loading) {
             return;
         }
         setLoading(true);
-        fetch('https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo')
-            .then((res) => res.json())
-            .then((body) => {
-                setData([...data, ...body.results]);
-                setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
+        try {
+            const response = await fetch(`http://localhost:8000/api/getContacts/${me?._id}`);
+            const body = await response.json();
+            setData(body.Allcontacts);
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSquareIconClick = () => {
@@ -34,7 +35,7 @@ const Boxmessage = () => {
 
     useEffect(() => {
         loadMoreData();
-    }, []);
+    }, [data]);
 
     return (
         <>
@@ -52,7 +53,7 @@ const Boxmessage = () => {
                 }}
             >
                 <InfiniteScroll
-                    dataLength={data.length}
+                    dataLength={data}
                     next={loadMoreData}
                     hasMore={data.length < 50}
                     loader={
@@ -70,11 +71,17 @@ const Boxmessage = () => {
                     <List
                         dataSource={data}
                         renderItem={(item) => (
-                            <List.Item key={item.email} onClick={() => setUser(item)}>
+                            <List.Item key={item.mail} onClick={() => setUser(item)}>
                                 <List.Item.Meta
-                                    avatar={<Avatar src={item.picture.large} />}
-                                    title={item.name.last}
-                                    description={<p>Hey ! What's up bro ?</p>}
+                                    avatar={item?.picture ? <Avatar src={item?.picture} /> : <Avatar
+                                        style={{
+                                            backgroundColor: '#808080',
+                                        }}
+                                    >
+                                        {item?.username.slice(0,1)}
+                                    </Avatar>}
+                                    title={item.username}
+                                    description={item.mail}
                                 />
                             </List.Item>
                         )}
@@ -85,4 +92,4 @@ const Boxmessage = () => {
         </>
     );
 };
-export default Boxmessage;
+export default DirectMessage;
