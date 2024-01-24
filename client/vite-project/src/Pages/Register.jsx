@@ -8,7 +8,6 @@ const Register = () => {
   const navigate = useNavigate()
 
   const onFinish = async (values) => {
-    console.log('Received values:', values);
 
     try {
       const response = await fetch('http://localhost:8000/api/register', {
@@ -25,7 +24,6 @@ const Register = () => {
       });
 
       const data = await response.json();
-      console.log('data', data);
 
       if (response.status === 201) {
         message.success('Registration successful');

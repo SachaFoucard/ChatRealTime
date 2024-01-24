@@ -10,7 +10,7 @@ const Mode = () => (
                 width: 200,
                 marginLeft:20
             }}
-            bordered={false}
+            variant={false}
             options={[
                 {
                     value: 'Active',

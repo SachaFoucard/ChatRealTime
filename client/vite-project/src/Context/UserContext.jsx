@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
 export const UserContext = createContext();
 
@@ -26,8 +26,7 @@ export default function UserContextProvider({ children }) {
   const [openInfo, setOpenInfo] = useState(false)
   // toggle Open/Close the feature User-info on the right page
 
-  const [me, setMe] = useState({})
-
+  const [me, setMe] = useState(null)
 
   const value = {
     selectedFeature,
@@ -36,8 +35,14 @@ export default function UserContextProvider({ children }) {
     setUser,
     setOpenInfo,
     openInfo,
-    setMe
+    setMe,
+    me
   }
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    const initialUserData = storedUserData ? JSON.parse(storedUserData) : null;
+    setMe(initialUserData);
+  }, [])
 
   return (
     <UserContext.Provider value={value}>

@@ -3,9 +3,10 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Avatar, Divider, List, Skeleton } from 'antd';
 import { useContext } from 'react';
 import { UserContext } from '../Context/UserContext';
+import { PlusSquareTwoTone } from '@ant-design/icons'
 
 const FavoritesMess = () => {
-    const { setUser } = useContext(UserContext);
+    const { setUser, me, user } = useContext(UserContext);
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
@@ -15,24 +16,28 @@ const FavoritesMess = () => {
             return;
         }
         setLoading(true);
-        fetch('https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo')
-            .then((res) => res.json())
-            .then((body) => {
-                setData(body.results);
-                setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
+        try {
+            const response = await fetch(`http://localhost:8000/api/favoritesContacts/${me?._id}`);
+            const body = await response.json();
+            setData(body.ArrayUsers);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
+
 
     useEffect(() => {
         loadMoreData();
-    }, []);
+    }, [data]);
 
     return (
         <>
-            <h4 className='title-fav'>Favorites</h4>
+            <div className='Header-add-discussion'>
+                <h6 className='title-Mess'>Favorites Message</h6>
+                <PlusSquareTwoTone style={{ fontSize: 30, border: 10, borderColor: 'green' }} />
+            </div>
             <div
                 id="scrollableDiv"
                 style={{
@@ -61,11 +66,17 @@ const FavoritesMess = () => {
                     <List
                         dataSource={data}
                         renderItem={(item) => (
-                            <List.Item key={item.email} onClick={() => setUser(item)}>
+                            <List.Item key={item.mail} onClick={() => setUser(item)}>
                                 <List.Item.Meta
-                                    avatar={<Avatar src={item.picture.large} />}
-                                    title={item.name.last}
-                                    description={item.email}
+                                    avatar={item?.picture ? <Avatar src={item?.picture} /> : <Avatar
+                                        style={{
+                                            backgroundColor: '#f56a00',
+                                        }}
+                                    >
+                                        {item?.username.slice(0,1)}
+                                    </Avatar>}
+                                    title={item.username}
+                                    description={item.mail}
                                 />
                             </List.Item>
                         )}

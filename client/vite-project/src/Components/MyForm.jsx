@@ -1,31 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Form, Input, Button, Collapse } from 'antd';
 import { Select, Switch } from 'antd';
+import { UserContext } from '../Context/UserContext';
 
 const { Panel } = Collapse;
 
 const MyForm = () => {
     const [form] = Form.useForm();
     const [editMode, setEditMode] = useState(false);
-    const [placement, SetPlacement] = useState('bottomRight');
+    const [placement, setPlacement] = useState('bottomRight');
+    const [activeKey, setActiveKey] = useState([]);
+    const { me, setMe } = useContext(UserContext);
 
     const onChange = (checked) => {
         console.log(`switch to ${checked}`);
     };
 
     const initialValues = {
-        name: 'Sacha Foucard',
-        email: 'Sachafoucard8@gmail.com',
-        phone: '123-456-7890',
-        location: 'Ramat Gan, Israel',
-        description: "A professional profile is an introductory section on your resume that highlights your relevant qualifications and skills."
+        name: me?.username,
+        email: me?.mail,
+        phone: me?.phone,
+        jobTitle: me?.jobTitle
     };
 
-    const onFinish = (values) => {
-        console.log('Received values:', values);
-        // Handle form submission logic here
-        // You can update the state, send data to the server, etc.
-        setEditMode(false);
+    const onFinish = async (values) => {
+        try {
+            console.log('values', values);
+            const response = await fetch(`http://localhost:8000/api/update/${me._id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    jobTitle: values?.jobTitle,
+                    phone: values?.phone
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update user data');
+            }
+
+            // If your server sends back data after updating, you might want to handle it here
+            const responseData = await response.json();
+            setMe(responseData)
+            localStorage.setItem('userData', JSON.stringify(responseData));
+
+            setEditMode(!editMode)
+
+        } catch (error) {
+            console.error('Error updating user data:', error);
+            // Provide user feedback on error if needed
+        }
     };
 
     const handleSave = () => {
@@ -36,10 +62,23 @@ const MyForm = () => {
         setEditMode(true);
     };
 
+    const handlePanelChange = (keys) => {
+        setActiveKey(keys);
+    };
+
+    useEffect(() => {
+        console.log('refresh data');
+    }, [me])
+
+
     return (
         <>
-            <Collapse accordion>
-                <Panel header="Personal Info" key="1" >
+            <Collapse
+                accordion
+                activeKey={activeKey}
+                onChange={handlePanelChange}
+            >
+                <Panel header="Personal Info" key="1">
                     <Form
                         form={form}
                         labelCol={{
@@ -52,7 +91,7 @@ const MyForm = () => {
                         onFinish={onFinish}
                     >
                         <Form.Item
-                            label="Name"
+                            label="name"
                             name="name"
                             rules={[
                                 {
@@ -61,24 +100,24 @@ const MyForm = () => {
                                 },
                             ]}
                         >
-                            <Input placeholder="Enter your name" disabled={!editMode} />
+                            <Input placeholder="Enter your name" disabled={!editMode} style={{ width: 150 }} />
                         </Form.Item>
 
                         <Form.Item
-                            label="Email"
+                            label="mail"
                             name="email"
                             rules={[
                                 {
-                                    required: true,
+                                    required: false,
                                     message: 'Please input your email address!',
                                 },
                             ]}
                         >
-                            <Input placeholder="Enter your email" disabled={!editMode} />
+                            <Input placeholder="Enter your email" readOnly disabled={false} style={{ backgroundColor: '#d3d3d3', width: 150 }} />
                         </Form.Item>
 
                         <Form.Item
-                            label="Phone No"
+                            label="Tel"
                             name="phone"
                             rules={[
                                 {
@@ -87,34 +126,22 @@ const MyForm = () => {
                                 },
                             ]}
                         >
-                            <Input placeholder="Enter your phone number" disabled={!editMode} />
+                            <Input placeholder="Enter your phone number" disabled={!editMode} style={{ width: 150 }} />
                         </Form.Item>
 
                         <Form.Item
-                            label="Location"
-                            name="location"
+                            label="Job"
+                            name="jobTitle"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your location!',
-                                },
-                            ]}
-                        >
-                            <Input placeholder="Enter your location" disabled={!editMode} />
-                        </Form.Item>
-                        <Form.Item
-                            label="Description"
-                            name="description"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your description!',
+                                    message: 'Please input your JobTitle!',
                                 },
                             ]}
                         >
                             <Input.TextArea
-                                placeholder="Enter your description"
-                                autoSize={{ minRows: 3, maxRows: 6 }} // Adjust the number of rows as needed
+                                placeholder="jobTitle"
+                                autoSize={{ minRows: 1, maxRows: 1 }} // Adjust the number of rows as needed
                                 disabled={!editMode}
                             />
                         </Form.Item>
@@ -139,9 +166,7 @@ const MyForm = () => {
 
                     </Form>
                 </Panel>
-            </Collapse>
-            <Collapse accordion>
-                <Panel header="Privacy" key="2" >
+                <Panel header="Privacy" key="2">
                     <h5>Who can see my personal info</h5>
                     <div className='profil-photo flx'>
                         <p>Profile photo</p>
@@ -223,12 +248,8 @@ const MyForm = () => {
                         <p>Read receipts</p>
                         <Switch size='small' defaultChecked onChange={onChange} />
                     </div>
-
-
                 </Panel>
-            </Collapse>
-            <Collapse accordion>
-                <Panel header="Security" key="3" >
+                <Panel header="Security" key="3">
                     <div className='security flx'>
                         <p>Show security notification</p>
                         <Switch size='small' defaultChecked onChange={onChange} />
@@ -241,8 +262,7 @@ const MyForm = () => {
                         <p>FAQs</p>
                         <p>Contact</p>
                         <p>Terms & Privacy policy</p>
-                    </div>
-                </Panel>
+                    </div>                </Panel>
             </Collapse>
         </>
     );

@@ -1,4 +1,5 @@
 // Import necessary libraries
+const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 
 // Define the schema for the User
@@ -11,9 +12,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    password:{
-        type:String,
-        require:true
+    password: {
+        type: String,
+        require: true
     },
     phone: {
         type: String,
@@ -22,6 +23,18 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true
+    },
+    gender: {
+        type: String,
+        required: false
+    },
+    firstName: {
+        type: String,
+        required: false
+    },
+    lastName: {
+        type: String,
+        required: false
     },
     backgroundImage: {
         type: String,
@@ -36,7 +49,7 @@ const userSchema = new mongoose.Schema({
         required: false
     },
     favContacts: {
-        type: Array,
+        type: [mongoose.Types.ObjectId],
         require: false
     },
     contacts: {
@@ -47,6 +60,10 @@ const userSchema = new mongoose.Schema({
         type: Array,
         require: false
     },
+    jobTitle:{
+        type: String,
+        required: false
+    }
 
 });
 

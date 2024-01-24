@@ -7,7 +7,7 @@ import { UserContext } from '../Context/UserContext';
 
 const Login = () => {
 
-    const { setMe, me } = useContext(UserContext);
+    const { setMe } = useContext(UserContext);
     const navigate = useNavigate()
 
     const onFinish = async (values) => {
@@ -22,24 +22,26 @@ const Login = () => {
                     password: values?.password,
                     username: values?.username,
                 })
-            })
+            });
+    
             const response = await data.json();
-            console.log("response", response);
+            setMe(response?.user);
+            localStorage.setItem('userData', JSON.stringify(response?.user));
 
             if (data.status === 201) {
-                message.success(`Welcome ${me?.username}`);
-                navigate(`/userNo/:${me?._id}`)
+                console.log(response?.user);
+                navigate(`/userNo/:${response?.user?._id}`);
+                message.success(`Welcome ${response?.user?.username}`);
+            } else {
+                message.error('Try again, something went wrong.');
             }
-            else {
-                console.log('rrr');
-                message.error('try an other time, something wron.');
-            }
-
+    
         } catch (error) {
-            message.error('try an other time, something wrong...');
+            message.error('Try again, something went wrong...');
             console.error('Login error', error);
         }
     };
+    
 
     return (
         <div className="login-container">

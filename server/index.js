@@ -13,6 +13,8 @@ app.use(express.json());
 dbConnect()
 
 app.use('/api',require('./Routes/route.user'))
+app.use('/api',require('./Routes/roote.room'))
+
 
 try {
     app.listen(PORT, () => console.log(`http://localhost:${PORT}`));

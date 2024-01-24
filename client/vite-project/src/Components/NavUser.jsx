@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { FolderOutlined, AudioMutedOutlined, DeleteOutlined, InboxOutlined, InfoCircleFilled, SettingTwoTone } from '@ant-design/icons'
+import {Avatar} from 'antd'
 import { UserContext } from '../Context/UserContext'
 import SearchWord from '../Widgets.jsx/Nav/SearchWord'
 import Call from '../Widgets.jsx/Nav/Call'
@@ -7,7 +8,7 @@ import Video from '../Widgets.jsx/Nav/Video'
 import OptionBtn from '../Widgets.jsx/OptionBtn'
 
 export default function NavUser() {
-    const { user, openInfo, setOpenInfo } = useContext(UserContext)
+    const { user, openInfo, setOpenInfo, me } = useContext(UserContext)
 
     const items = [
         {
@@ -28,9 +29,8 @@ export default function NavUser() {
     ]
 
 
-
     useEffect(() => {
-        console.log("user", user);
+
     }, [user])
 
 
@@ -38,9 +38,15 @@ export default function NavUser() {
         <>
             <div id='bar-user' className='bar-user'>
                 <div className='dicussions-profil-user'>
-                    <img src={user?.picture?.large} />
+                    {user?.picture ? <img src={user?.picture} /> : <Avatar
+                        style={{
+                            backgroundColor: '#f56a00',
+                        }}
+                    >
+                        {user?.username.slice(0, 1)}
+                    </Avatar>}
                     <div className='name-status'>
-                        <h4>{user?.name?.last}</h4>
+                        <h4>{user?.username}</h4>
                         <p>Online</p>
                     </div>
                 </div>
