@@ -9,7 +9,7 @@ import OptionBtn from '../Widgets.jsx/OptionBtn'
 import { useNavigate } from 'react-router-dom'
 
 export default function NavUser() {
-    const { user, openInfo, setOpenInfo, me } = useContext(UserContext)
+    const { user, openInfo, setOpenInfo, setMe } = useContext(UserContext)
     const navigate = useNavigate()
     const items = [
         {
@@ -31,6 +31,7 @@ export default function NavUser() {
 
     const Logout = () => {
         localStorage.removeItem('userData')
+        setMe(null)
         navigate('/')
     }
 

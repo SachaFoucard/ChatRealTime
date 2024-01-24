@@ -43,7 +43,7 @@ export default function UserContextProvider({ children }) {
     const storedUserData = localStorage.getItem('userData');
     const initialUserData = storedUserData ? JSON.parse(storedUserData) : null;
     setMe(initialUserData);
-  }, [])
+  }, [me?._id])
 
   return (
     <UserContext.Provider value={value}>
