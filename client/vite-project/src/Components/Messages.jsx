@@ -1,4 +1,4 @@
-import React from 'react';
+import {useEffect} from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import FavoritesMess from './FavoritesMess';
@@ -7,6 +7,9 @@ import DirectMessage from './DirectMessage';
 const { Search } = Input;
 
 export default function Messages() {
+  useEffect(()=> {
+    // refresh data here to update the contactFav and ContactUser
+  },[])
   return (
     <div className='BarMenu'>
       <div className='Messages-header-container'>
