@@ -26,24 +26,37 @@ const ModalAddContact = ({ isVisible, setIsVisible }) => {
 
   const addContact = async () => {
     try {
-      const data = await fetch(`http://localhost:8000/api/addContact/${me?._id}`, {
+      // Check if both me and userFound are defined
+      if (!me || !userFound) {
+        message.error('Invalid user data');
+        return;
+      }
+  
+      const response = await fetch(`http://localhost:8000/api/addContact/${me._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user2: userFound?._id,
+          user2: userFound._id,
         })
       });
-      const response = await data.json();
-      if (response.status == 200) {
-        message.success('User added successfully')
+  
+      const data = await response.json();
+  
+      if (response.status === 200) {
+        message.success('User added successfully');
+      } else if (response.status === 404) {
+        message.error(data.message); // Display the error message from the backend
+      } else {
+        message.error('Failed to add user');
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       message.error('Failed to add user');
     }
-  }
+  };
+  
 
   const hideModal = () => {
     setIsVisible(false);

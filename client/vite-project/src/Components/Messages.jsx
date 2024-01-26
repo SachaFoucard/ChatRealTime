@@ -14,7 +14,7 @@ export default function Messages() {
   const [data, setData] = useState([]);
   const [hasMoreData, setHasMoreData] = useState(true); // Track if there's more data to load
   const [search, setSearchResults] = useState('')
-
+ 
   useEffect(() => {
     // Filter data based on input
     const filteredData = data.filter(item => {

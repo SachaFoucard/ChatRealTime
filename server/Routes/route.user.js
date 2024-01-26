@@ -174,7 +174,7 @@ route.post('/addContact/:id', async (req, res) => {
     console.log(user1Instance);
 
     if (user1Instance) {
-      return res.status(200).json({ message: 'Hi User1, sorry but User2 is already in your contacts' });
+      return res.status(404).json({ message: 'Hi User1, sorry but User2 is already in your contacts' });
     } else {
       const userToUpdate = await User.findOne({ _id: userId });
       if (!userToUpdate) {
