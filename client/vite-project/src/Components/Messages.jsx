@@ -43,11 +43,11 @@ export default function Messages() {
     }
 };
 
-
   const handleInputChange = (e) => {
     setInput(e.target.value);
   };
 
+ 
   return (
     <div className='BarMenu'>
       <div className='Messages-header-container'>
