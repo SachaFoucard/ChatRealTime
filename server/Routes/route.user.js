@@ -131,19 +131,19 @@ route.get('/favoritesContacts/:id', async (req, res) => {
 
 //get all contacts from user1
 route.get('/getContacts/:id', async (req, res) => {
-  const { id:user1 } = req.params.id;
-
+  const { id } = req.params; // Corrected
   try {
-    const user = await User.findOne(user1);
+    const user = await User.findOne({ _id: id });
+    console.log(user);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     const Allcontacts = [];
 
-    const favContacts = user.contacts || [];
-    for (let i = 0; i < favContacts.length; i++) {
-      const user = await User.findOne({ _id: favContacts[i]?._id });
-      Allcontacts.push(user)
+    const contacts = user.contacts || [];
+    for (let i = 0; i < contacts.length; i++) {
+      const userContact = await User.findOne({ _id: contacts[i]?._id });
+      Allcontacts.push(userContact)
     }
 
     return res.status(200).json({ Allcontacts });

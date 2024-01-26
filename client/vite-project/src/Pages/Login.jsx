@@ -7,7 +7,7 @@ import { UserContext } from '../Context/UserContext';
 
 const Login = () => {
 
-    const { setMe } = useContext(UserContext);
+    const { setMe,me } = useContext(UserContext);
     const navigate = useNavigate()
 
     const onFinish = async (values) => {
@@ -26,6 +26,7 @@ const Login = () => {
     
             const response = await data.json();
             setMe(response?.user);
+            console.log('me login =>', me);
             localStorage.setItem('userData', JSON.stringify(response?.user));
 
             if (data.status === 201) {

@@ -6,36 +6,17 @@ import { useContext } from 'react';
 import { UserContext } from '../Context/UserContext';
 import ModalAddContact from '../Widgets.jsx/ModalAddContact'
 
-const DirectMessage = () => {
-    const { setUser,me } = useContext(UserContext)
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([]);
+const DirectMessage = ({loadContactFromUser,data,hasMoreData,search}) => {
+    const { setUser } = useContext(UserContext);
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
-
-    const loadMoreData = async () => {
-        if (loading) {
-            return;
-        }
-        setLoading(true);
-        try {
-            const response = await fetch(`http://localhost:8000/api/getContacts/${me?._id}`);
-            const body = await response.json();
-            setData(body.Allcontacts);
-            console.log(data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleSquareIconClick = () => {
         setIsModalVisible(true); // Show the modal when the square icon is clicked
     };
 
     useEffect(() => {
-        loadMoreData();
-    }, []);
+        loadContactFromUser();
+    }, [data]);
 
     return (
         <>
@@ -53,9 +34,9 @@ const DirectMessage = () => {
                 }}
             >
                 <InfiniteScroll
-                    dataLength={data}
-                    next={loadMoreData}
-                    hasMore={data.length < 50}
+                    dataLength={data.length}
+                    next={loadContactFromUser}
+                    hasMore={hasMoreData} // Use state variable to determine if there's more data
                     loader={
                         <Skeleton
                             avatar
@@ -78,7 +59,7 @@ const DirectMessage = () => {
                                             backgroundColor: '#808080',
                                         }}
                                     >
-                                        {item?.username.slice(0,1)}
+                                        {item?.username.slice(0, 1)}
                                     </Avatar>}
                                     title={item.username}
                                     description={item.mail}
