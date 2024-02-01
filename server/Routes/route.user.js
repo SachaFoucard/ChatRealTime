@@ -3,6 +3,24 @@ const User = require('../Models/User');
 const bcrypt = require('bcrypt');
 const ObjectId = require('mongodb').ObjectId;
 
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
+const { expiration } = require('./route.aws');
+
+const BUCKET_REGION = process.env.BUCKET_REGION;
+const ACCESS_KEY = process.env.ACCESS_KEY;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+const BUCKET_NAME = process.env.BUCKET_NAME;
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: ACCESS_KEY,
+    secretAccessKey: SECRET_ACCESS_KEY,
+  },
+  region: BUCKET_REGION,
+})
+
 require('dotenv').config();
 
 route.post('/register', async (req, res) => {
@@ -52,6 +70,10 @@ route.post('/login', async (req, res) => {
     const user = await User.findOne({ $or: [{ username }, { mail }] });
 
     if (user && (await bcrypt.compare(password, user.password))) {
+      if (user.picture != '') {
+        const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.BUCKET_NAME, Key: user.picture }, { expiresIn: expiration }));
+        user.picture = url
+      }
       return res.status(201).json({ user });
     } else {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -119,6 +141,10 @@ route.get('/favoritesContacts/:id', async (req, res) => {
     const favContacts = user.favContacts || [];
     for (let i = 0; i < favContacts.length; i++) {
       const user = await User.findOne({ _id: favContacts[i]._id });
+      if (user.picture != '') {
+        const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.BUCKET_NAME, Key: user.picture }, { expiresIn: expiration }));
+        user.picture = url
+      }
       ArrayUsers.push(user)
     }
 
@@ -131,10 +157,9 @@ route.get('/favoritesContacts/:id', async (req, res) => {
 
 //get all contacts from user1
 route.get('/getContacts/:id', async (req, res) => {
-  const { id } = req.params; // Corrected
+  const { id } = req.params; // Accessing params inside the route handler function
   try {
     const user = await User.findOne({ _id: id });
-    console.log(user);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -143,15 +168,20 @@ route.get('/getContacts/:id', async (req, res) => {
     const contacts = user.contacts || [];
     for (let i = 0; i < contacts.length; i++) {
       const userContact = await User.findOne({ _id: contacts[i]?._id });
+      console.log(userContact);
+      if (userContact.picture != '') {
+        const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.BUCKET_NAME, Key: userContact.picture }, { expiresIn: expiration }));
+        userContact.picture = url
+      }
       Allcontacts.push(userContact)
     }
-
     return res.status(200).json({ Allcontacts });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 })
+
 
 route.get('/searchUser/:input', async (req, res) => {
   const { input } = req.params
@@ -174,7 +204,7 @@ route.post('/addContact/:id', async (req, res) => {
     console.log(user1Instance);
 
     if (user1Instance) {
-      return res.status(404).json({ message: 'Hi User1, sorry but User2 is already in your contacts' });
+      return res.status(401).json({ message: 'Hi User1, sorry but User2 is already in your contacts' });
     } else {
       const userToUpdate = await User.findOne({ _id: userId });
       if (!userToUpdate) {
