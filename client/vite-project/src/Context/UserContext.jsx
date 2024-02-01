@@ -6,22 +6,7 @@ export default function UserContextProvider({ children }) {
 
   const [selectedFeature, setSelectedFeature] = useState("Messages"); // menu click nav
 
-  const [user, setUser] = useState({
-    "gender": "female",
-    "name": {
-      "title": "Miss",
-      "first": "Zoe",
-      "last": "Oliver"
-    },
-    "email": "zoe.oliver@example.com",
-    "picture": {
-      "large": "https://randomuser.me/api/portraits/women/25.jpg",
-      "medium": "https://randomuser.me/api/portraits/med/women/25.jpg",
-      "thumbnail": "https://randomuser.me/api/portraits/thumb/women/25.jpg"
-    },
-    "nat": "GB"
-  }
-  ); // click on user message 
+  const [user, setUser] = useState(null); // click on user message 
 
   const [openInfo, setOpenInfo] = useState(false)
   // toggle Open/Close the feature User-info on the right page

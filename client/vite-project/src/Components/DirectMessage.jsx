@@ -4,10 +4,10 @@ import { Avatar, Divider, List, Skeleton } from 'antd';
 import { PlusSquareTwoTone } from '@ant-design/icons'
 import { useContext } from 'react';
 import { UserContext } from '../Context/UserContext';
-import ModalAddContact from '../Widgets.jsx/ModalAddContact'
+import ModalCreateChat from '../Widgets.jsx/ModalCreateChat';
 
-const DirectMessage = ({loadContactFromUser,data,hasMoreData,search}) => {
-    const { setUser } = useContext(UserContext);
+const DirectMessage = ({GetChat,contactsOpenChat,hasMoreData}) => {
+    const { setUser,me } = useContext(UserContext);
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
     const handleSquareIconClick = () => {
@@ -15,13 +15,15 @@ const DirectMessage = ({loadContactFromUser,data,hasMoreData,search}) => {
     };
 
     useEffect(() => {
-        loadContactFromUser();
-    }, [data]);
+        
+    }, [contactsOpenChat]);
+
+    {console.log(contactsOpenChat);}
 
     return (
         <>
             <div className='Header-add-discussion'>
-                <h6 className='title-Mess'>Direct Message</h6>
+                <h6 className='title-Mess'>Chat</h6>
                 <PlusSquareTwoTone onClick={handleSquareIconClick} style={{ fontSize: 30, border: 10, borderColor: 'green' }} />
             </div>
             <div
@@ -34,8 +36,8 @@ const DirectMessage = ({loadContactFromUser,data,hasMoreData,search}) => {
                 }}
             >
                 <InfiniteScroll
-                    dataLength={data.length}
-                    next={loadContactFromUser}
+                    dataLength={contactsOpenChat}
+                    next={GetChat}
                     hasMore={hasMoreData} // Use state variable to determine if there's more data
                     loader={
                         <Skeleton
@@ -50,7 +52,7 @@ const DirectMessage = ({loadContactFromUser,data,hasMoreData,search}) => {
                     scrollableTarget="scrollableDiv"
                 >
                     <List
-                        dataSource={data}
+                        dataSource={contactsOpenChat}
                         renderItem={(item) => (
                             <List.Item key={item.mail} onClick={() => setUser(item)}>
                                 <List.Item.Meta
@@ -69,7 +71,7 @@ const DirectMessage = ({loadContactFromUser,data,hasMoreData,search}) => {
                     />
                 </InfiniteScroll>
             </div>
-            <ModalAddContact isVisible={isModalVisible} setIsVisible={setIsModalVisible} />
+            <ModalCreateChat isVisible={isModalVisible} setIsVisible={setIsModalVisible} />
         </>
     );
 };
