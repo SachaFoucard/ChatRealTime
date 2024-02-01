@@ -8,64 +8,61 @@ import { UserContext } from '../Context/UserContext';
 const { Search } = Input;
 
 export default function Messages() {
-  const { me } = useContext(UserContext)
-  const [input, setInput] = useState('')
+  const { me } = useContext(UserContext);
+  const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [contactsOpenChat, setContactsOpenChat] = useState([]);
   const [hasMoreData, setHasMoreData] = useState(true); // Track if there's more data to load
-  const [search, setSearchResults] = useState('')
- 
-  useEffect(() => {
-    // Filter data based on input
-    const filteredData = data.filter(item => {
-      return item.username.toLowerCase().includes(input.toLowerCase());
-    });
-    setSearchResults(filteredData);
-  }, [input, data]);
 
-  const loadContactFromUser = async () => {
-    if (!me || !me._id || loading || !hasMoreData) {
-        return;
+  // Fetch chat data from the server when the component mounts
+  useEffect(() => {
+    GetChat();
+  }, []);
+
+  const GetChat = async () => {
+    if (!me?._id || loading || !hasMoreData) {
+      return;
     }
     setLoading(true);
     try {
-        const response = await fetch(`http://localhost:8000/api/getContacts/${me._id}`);
-        const body = await response.json();
-        if (body?.Allcontacts) {
-            setData(body?.Allcontacts);
-        } else {
-            setHasMoreData(false); // No more data to load
-        }
+      const data = await fetch(`http://localhost:8000/api/findChat/${me?._id}`);
+      const response = await data.json();
+      if (response) {
+        setContactsOpenChat(response);
+      } else {
+        setHasMoreData(false); // No more data to load
+      }
     } catch (error) {
-        console.error(error);
+      console.error(error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
   };
 
- 
   return (
-    <div className='BarMenu'>
-      <div className='Messages-header-container'>
-        <h2>Messages (128)</h2>
-        <Space direction="vertical" size="middle">
-          <Space.Compact size="large">
-            <Input addonBefore={<SearchOutlined />} onChange={handleInputChange} placeholder="Search here..." />
-          </Space.Compact>
-        </Space>
-      </div>
-      <div className='Messages-content'>
-        <div className='Favorites-messages'>
-          <FavoritesMess />
+    <>
+      <div className='BarMenu'>
+        <div className='Messages-header-container'>
+          <h2>Messages (128)</h2>
+          <Space direction="vertical" size="middle">
+            <Space.Compact size="large">
+              <Input addonBefore={<SearchOutlined />} onChange={handleInputChange} placeholder="Search here..." />
+            </Space.Compact>
+          </Space>
         </div>
-        <div className='Messages-directe' style={{ maxHeight: 'calc(100vh - 120px)' }}>
-          <DirectMessage loadContactFromUser={loadContactFromUser} data={search} hasMoreData={hasMoreData} search={search} />
+        <div className='Messages-content'>
+          <div className='Favorites-messages'>
+            <FavoritesMess />
+          </div>
+          <div className='Messages-directe' style={{ maxHeight: 'calc(100vh - 120px)' }}>
+            <DirectMessage GetChat={GetChat} contactsOpenChat={contactsOpenChat} hasMoreData={hasMoreData} me={me}  />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

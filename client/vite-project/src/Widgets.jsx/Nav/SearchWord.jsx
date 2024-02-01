@@ -24,10 +24,10 @@ const SearchWord = () => {
 
   return (
     <Dropdown
-      overlay={menu}  
+      menu={menu}  
       trigger={['click']}
       open={visible} 
-      onVisibleChange={handleVisibleChange}
+      onOpenChange={handleVisibleChange}
     >
       <SearchOutlined style={{ fontSize: 18, color: 'grey' }} />
     </Dropdown>

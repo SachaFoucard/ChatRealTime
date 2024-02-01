@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import OptionBtn from '../Widgets.jsx/OptionBtn';
 import ImgBgProfile from '../assets/backgroundProfile.jpg';
 import ProfilePicture from '../Widgets.jsx/ProfilePicture';
-import { UserOutlined, PhoneOutlined, MailOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import { QuestionCircleOutlined, SettingOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, SettingOutlined, InfoCircleOutlined,MailOutlined,PhoneOutlined,UserOutlined, WomanOutlined } from '@ant-design/icons';
 import { UserContext } from '../Context/UserContext';
 
 export default function MyProfile() {
@@ -13,11 +12,13 @@ export default function MyProfile() {
     { value: me?.username, icon: <UserOutlined style={{ fontSize: '16px' }} /> },
     { value: me?.phone, icon: <PhoneOutlined style={{ fontSize: '16px' }} /> },
     { value: me?.mail, icon: <MailOutlined style={{ fontSize: '16px' }} /> },
+    { value: me?.gender, icon: <WomanOutlined style={{ fontSize: '16px' }} /> },
+
   ];
 
   const items = [
     {
-      key: '1',
+      key: '5',
       label: 'Infos',
       icon: <InfoCircleOutlined style={{ fontSize: '16px' }} />,
     },
@@ -32,8 +33,7 @@ export default function MyProfile() {
       icon: <QuestionCircleOutlined style={{ fontSize: '16px' }} />,
     }
     ];
-
-  console.log('meMyProfil', me);
+  
 
   return (
     <>

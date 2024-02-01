@@ -10,7 +10,7 @@ const OptionBtn = ({ color, items }) => (
     >
         <a onClick={(e) => e.preventDefault()}>
             <Space>
-                <MoreOutlined style={{ color: color, fontSize: 22, cursor: 'pointer'}} />
+                <MoreOutlined style={{ color: color, fontSize: 22, cursor: 'pointer' }} />
             </Space>
         </a>
     </Dropdown>

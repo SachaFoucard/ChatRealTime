@@ -13,7 +13,12 @@ app.use(express.json());
 dbConnect()
 
 app.use('/api',require('./Routes/route.user'))
-app.use('/api',require('./Routes/roote.room'))
+app.use('/api',require('./Routes/route.aws'))
+app.use('/api',require('./Routes/route.chats'))
+app.use('/api',require('./Routes/route.messages'))
+
+
+
 
 
 try {

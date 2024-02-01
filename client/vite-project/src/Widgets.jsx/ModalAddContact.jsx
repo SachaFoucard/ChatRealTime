@@ -48,8 +48,8 @@ const ModalAddContact = ({ isVisible, setIsVisible }) => {
         message.success('User added successfully');
       } else if (response.status === 404) {
         message.error(data.message); // Display the error message from the backend
-      } else {
-        message.error('Failed to add user');
+      } else if (response.status === 401) {
+        message.error('Contact already in your list');
       }
     } catch (error) {
       console.error(error);

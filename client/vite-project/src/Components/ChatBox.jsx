@@ -1,15 +1,32 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Input, Button, List, Avatar, Space } from 'antd';
 import { UserContext } from '../Context/UserContext';
-import { calc } from 'antd/es/theme/internal';
 
 const { TextArea } = Input;
 
 const ChatBox = () => {
-    const { user } = useContext(UserContext)
+    const { user } = useContext(UserContext);
     const [inputMessage, setInputMessage] = useState('');
     const [messages, setMessages] = useState([]);
+
+    useEffect(() => {
+        getMessages();
+    }, []);
+
+    const getMessages = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/api/getMessages/65bb7f1112adb18f4cf2d69f');
+            setMessages(response.data.map(msg => ({
+                id: msg._id,
+                text: msg.text,
+                timestamp: new Date(msg.createdAt).toLocaleTimeString(),
+                senderId: msg.senderId,
+            })));
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    }
 
     const handleSendMessage = () => {
         if (inputMessage.trim() !== '') {
@@ -30,9 +47,9 @@ const ChatBox = () => {
                     itemLayout="horizontal"
                     dataSource={messages}
                     renderItem={(message) => (
-                        <List.Item>
+                        <List.Item style={{ textAlign: user._id === message.senderId ? 'right' : 'left' }}>
                             <List.Item.Meta
-                                avatar={<Avatar src={user?.picture?.large} />}
+                                avatar={<Avatar src={user._id === message.senderId ? user.picture.large : null} />}
                                 title={message.timestamp}
                                 description={message.text}
                             />
@@ -42,7 +59,7 @@ const ChatBox = () => {
             </div>
             <div className='bar-send'>
                 <Space>
-                    <TextArea style={{width:'100vh'}}
+                    <TextArea
                         rows={2}
                         value={inputMessage}
                         onChange={(e) => setInputMessage(e.target.value)}
@@ -52,7 +69,6 @@ const ChatBox = () => {
                 <Button type="primary" onClick={handleSendMessage}>
                     Send
                 </Button>
-
             </div>
         </div>
     );
