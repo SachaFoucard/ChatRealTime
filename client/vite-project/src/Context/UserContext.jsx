@@ -1,8 +1,11 @@
 import React, { createContext, useEffect, useState } from 'react'
+import {useNavigate} from 'react-router-dom'
+
 
 export const UserContext = createContext();
 
 export default function UserContextProvider({ children }) {
+  const nav = useNavigate()
 
   const [selectedFeature, setSelectedFeature] = useState("Messages"); // menu click nav
 
@@ -13,6 +16,10 @@ export default function UserContextProvider({ children }) {
 
   const [me, setMe] = useState(null)
 
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+
+
   const value = {
     selectedFeature,
     setSelectedFeature,
@@ -21,14 +28,16 @@ export default function UserContextProvider({ children }) {
     setOpenInfo,
     openInfo,
     setMe,
-    me
+    me,
+    setOnlineUsers, onlineUsers,
   }
 
   useEffect(() => {
-    const storedUserData = localStorage.getItem('userData');
+    const storedUserData = sessionStorage.getItem('userData');
     const initialUserData = storedUserData ? JSON.parse(storedUserData) : null;
     setMe(initialUserData);
-  }, [me?._id])
+  }, [me?._id]);
+
 
   return (
     <UserContext.Provider value={value}>

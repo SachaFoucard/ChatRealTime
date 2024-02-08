@@ -4,12 +4,13 @@ import { Input, Space } from 'antd';
 import FavoritesMess from './FavoritesMess';
 import DirectMessage from './DirectMessage';
 import { UserContext } from '../Context/UserContext';
+import { message } from 'antd'
 
 const { Search } = Input;
 
 export default function Messages() {
-  const { me } = useContext(UserContext);
-  const [input, setInput] = useState('');
+  const { me, setUser } = useContext(UserContext);
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const [contactsOpenChat, setContactsOpenChat] = useState([]);
   const [hasMoreData, setHasMoreData] = useState(true); // Track if there's more data to load
@@ -40,17 +41,26 @@ export default function Messages() {
   };
 
   const handleInputChange = (e) => {
-    setInput(e.target.value);
+    e.preventDefault()
+    if (!search) return;
+    if (search.length < 3) { return message.warning('Search term must be at last 3 character long') }
+    const userSearch = contactsOpenChat.find((u) => u.username.toLowerCase().includes(search.toLocaleLowerCase()))
+    if (userSearch) {
+      setUser(userSearch)
+      setSearch('')
+    } else {
+      message.error('not search user found !')
+    }
   };
 
   return (
     <>
       <div className='BarMenu'>
         <div className='Messages-header-container'>
-          <h2>Messages (128)</h2>
+          <h2>Chats ({contactsOpenChat.length})</h2>
           <Space direction="vertical" size="middle">
-            <Space.Compact size="large">
-              <Input addonBefore={<SearchOutlined />} onChange={handleInputChange} placeholder="Search here..." />
+            <Space.Compact size="large" onClick={handleInputChange} style={{cursor:'pointer'}}>
+              <Input addonBefore={<SearchOutlined />} value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search here..." />
             </Space.Compact>
           </Space>
         </div>
@@ -59,7 +69,7 @@ export default function Messages() {
             <FavoritesMess />
           </div>
           <div className='Messages-directe' style={{ maxHeight: 'calc(100vh - 120px)' }}>
-            <DirectMessage GetChat={GetChat} contactsOpenChat={contactsOpenChat} hasMoreData={hasMoreData} me={me}  />
+            <DirectMessage GetChat={GetChat} contactsOpenChat={contactsOpenChat} hasMoreData={hasMoreData} me={me} />
           </div>
         </div>
       </div>

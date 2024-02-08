@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import '../Styles/login.css'; // Import your custom styles
@@ -7,7 +7,7 @@ import { UserContext } from '../Context/UserContext';
 
 const Login = () => {
 
-    const { setMe,me } = useContext(UserContext);
+    const { setMe, me } = useContext(UserContext);
     const navigate = useNavigate()
 
     const onFinish = async (values) => {
@@ -23,26 +23,30 @@ const Login = () => {
                     username: values?.username,
                 })
             });
-    
+
             const response = await data.json();
             setMe(response?.user);
-            console.log('me login =>', me);
-            localStorage.setItem('userData', JSON.stringify(response?.user));
+            sessionStorage.setItem('userData', JSON.stringify(response?.user));
 
             if (data.status === 201) {
-                console.log(response?.user);
                 navigate(`/userNo/:${response?.user?._id}`);
                 message.success(`Welcome ${response?.user?.username}`);
             } else {
                 message.error('Try again, something went wrong.');
             }
-    
+
         } catch (error) {
             message.error('Try again, something went wrong...');
             console.error('Login error', error);
         }
     };
-    
+
+    useEffect(() => {
+        const lastUserConnected = sessionStorage.getItem('userData');
+        if (lastUserConnected){
+            navigate(`/userNo/:${lastUserConnected._id}`);
+        }
+    })
 
     return (
         <div className="login-container">

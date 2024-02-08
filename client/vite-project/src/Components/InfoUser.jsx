@@ -26,10 +26,10 @@ export default function InfoUser({ user }) {
     ];
 
     const userData = [
-        { value: user?.name?.last, icon: <UserOutlined style={{ fontSize: 13 }} /> },
+        { value: user?.username, icon: <UserOutlined style={{ fontSize: 13 }} /> },
         { value: '+1234567890', icon: <PhoneOutlined style={{ fontSize: 13 }} /> },
-        { value: user?.email, icon: <MailOutlined style={{ fontSize: 13 }} /> },
-        { value: 'Ramat Gan, Israel', icon: <EnvironmentOutlined style={{ fontSize: 13 }} /> },
+        { value: user?.mail, icon: <MailOutlined style={{ fontSize: 13 }} /> },
+        { value: user?.location, icon: <EnvironmentOutlined style={{ fontSize: 13 }} /> },
     ];
 
 
@@ -39,14 +39,14 @@ export default function InfoUser({ user }) {
         <>
             <div className='feature-info-user'>
                 <div className='block-info-user'>
-                    <img src={user.picture.large} alt='pp' />
+                    <img src={user?.picture} alt='pp' />
                     <div>
                         
                     </div>
                     <div className='icons-onImage'>
                         <span onClick={() => setOpenInfo(!openInfo)} className='close-icon'><CloseOutlined style={{ color: 'white' }} /></span>
                         <span className='options-icon' ><OptionBtn items={items} color={"white"} /> </span>
-                        <span className='name-user'><h3>{user.name.last}</h3></span>
+                        <span className='name-user'><h3>{user.username}</h3></span>
                         <span className='online-status'><p><CheckCircleTwoTone twoToneColor="#52c41a" /> &nbsp;Online</p></span>
                     </div>
                 </div>

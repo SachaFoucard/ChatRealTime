@@ -15,10 +15,8 @@ const DirectMessage = ({GetChat,contactsOpenChat,hasMoreData}) => {
     };
 
     useEffect(() => {
-        
-    }, [contactsOpenChat]);
-
-    {console.log(contactsOpenChat);}
+        GetChat()
+      }, [contactsOpenChat])
 
     return (
         <>

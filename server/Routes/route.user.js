@@ -51,7 +51,11 @@ route.post('/register', async (req, res) => {
         favMessages: req.body.favMessages || [],
         jobTitle: req.body.jobTitle || ''
       });
-
+      // if the user has a picture on his profil
+      if (user.picture != '') {
+        const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.BUCKET_NAME, Key: user.picture }, { expiresIn: expiration }));
+        user.picture = url;
+      }
       await user.save();
       return res.status(201).json(user);
     } else {
@@ -69,7 +73,7 @@ route.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ $or: [{ username }, { mail }] });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user && ( bcrypt.compare(password, user.password))) {
       if (user.picture != '') {
         const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.BUCKET_NAME, Key: user.picture }, { expiresIn: expiration }));
         user.picture = url
@@ -87,11 +91,18 @@ route.post('/login', async (req, res) => {
 route.post('/update/:id', async (req, res) => {
   const _id = req.params.id;
   const user = await User.findById(_id)
-  console.log('user', user);
 
   user.username = req.body.username || user.username;
   user.phone = req.body.phone || user.phone;
   user.jobTitle = req.body.jobTitle || user.jobTitle;
+  user.picture = req.body.picture || user.picture;
+
+  // make the keyName of the picture to a link to display the pic
+  if (user.picture != '') {
+    const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.BUCKET_NAME, Key: user.picture }, { expiresIn: expiration }));
+    user.picture = url
+  }
+
   const updatedUser = await user.save();
   res.status(201).json(updatedUser)
 })
@@ -104,7 +115,6 @@ route.post('/addContactToFav/:id', async (req, res) => {
 
   try {
     const user1Instance = await User.findOne({ _id: userId, favContacts: { $in: [user2] } });
-    console.log(user1Instance);
 
     if (user1Instance) {
       return res.status(200).json({ message: 'Hi User1, sorry but User2 is already in your favorites' });
@@ -168,7 +178,6 @@ route.get('/getContacts/:id', async (req, res) => {
     const contacts = user.contacts || [];
     for (let i = 0; i < contacts.length; i++) {
       const userContact = await User.findOne({ _id: contacts[i]?._id });
-      console.log(userContact);
       if (userContact.picture != '') {
         const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.BUCKET_NAME, Key: userContact.picture }, { expiresIn: expiration }));
         userContact.picture = url
@@ -201,7 +210,6 @@ route.post('/addContact/:id', async (req, res) => {
 
   try {
     const user1Instance = await User.findOne({ _id: userId, contacts: { $in: [user2] } });
-    console.log(user1Instance);
 
     if (user1Instance) {
       return res.status(401).json({ message: 'Hi User1, sorry but User2 is already in your contacts' });

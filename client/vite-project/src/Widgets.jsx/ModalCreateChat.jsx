@@ -34,7 +34,6 @@ const ModalCreateChat = ({ isVisible, setIsVisible }) => {
 
     const CreateChat = async (item) => {
         try {
-            console.log(item);
             const response = await fetch('http://localhost:8000/api/createChat', {
                 method: 'POST',
                 headers: {

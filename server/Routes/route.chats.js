@@ -63,6 +63,7 @@ app.post('/createChat', async (req, res) => {
 //     }
 // });
 
+// display all users with a open discussions
 app.get('/findChat/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -92,7 +93,7 @@ app.get('/findChat/:id', async (req, res) => {
 
 
 
-// find discussion of user 
+// find discussion with user 
 app.get('/findChat/:firstId/:secondId', async (req, res) => {
     const { firstId, secondId } = req.params;
     try {

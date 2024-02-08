@@ -29,7 +29,6 @@ const s3 = new S3Client({
 
 aws.post('/add', upload.single("image"), async (req, res) => {
     const { _id } = req.body; // Correct destructuring
-    console.log('enter', _id);
     // Import the sharp module
     const sharp = require('sharp');
 
@@ -52,9 +51,7 @@ aws.post('/add', upload.single("image"), async (req, res) => {
         });
         // Send the upload to S3
         await img.done();
-        console.log('img upload !');
         const user = await User.findByIdAndUpdate({ _id: _id }, { picture: fileName });
-        console.log('user found ', user);
         res.status(201).json(user)
 
     } catch (error) {

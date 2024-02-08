@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FolderOutlined, AudioMutedOutlined, DeleteOutlined, InboxOutlined, InfoCircleFilled, SettingTwoTone } from '@ant-design/icons'
 import { Avatar } from 'antd'
 import { UserContext } from '../Context/UserContext'
@@ -9,8 +9,10 @@ import OptionBtn from '../Widgets.jsx/OptionBtn'
 import { useNavigate } from 'react-router-dom'
 
 export default function NavUser() {
-    const { user, openInfo, setOpenInfo, setMe } = useContext(UserContext)
+    const { user, openInfo, setOpenInfo, setMe, onlineUsers } = useContext(UserContext)
     const navigate = useNavigate()
+    const [online,setOnline]=useState(false)
+  
     const items = [
         {
             key: 5,
@@ -30,16 +32,12 @@ export default function NavUser() {
     ]
 
     const Logout = () => {
-        localStorage.removeItem('userData')
+        sessionStorage.removeItem('userData')
         setMe(null)
         navigate('/')
     }
-
-    useEffect(() => {
-
-    }, [user])
-
-
+  
+   
     return (
         <>
             <div id='bar-user' className='bar-user'>
