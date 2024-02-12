@@ -13,7 +13,7 @@ const ModalAddContact = ({ isVisible, setIsVisible }) => {
     try {
       setLoading(true);
 
-      const data = await fetch(`http://localhost:8000/api/searchUser/${input}`);
+      const data = await fetch(`http://localhost:3000/api/searchUser/${input}`);
       const response = await data.json();
       setUserFound(response);
       setLoading(false); // Set loading to false after fetching data
@@ -32,7 +32,7 @@ const ModalAddContact = ({ isVisible, setIsVisible }) => {
         return;
       }
   
-      const response = await fetch(`http://localhost:8000/api/addContact/${me._id}`, {
+      const response = await fetch(`http://localhost:3000/api/addContact/${me._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

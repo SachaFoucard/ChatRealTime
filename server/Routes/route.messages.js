@@ -2,9 +2,12 @@ const app = require('express').Router();
 const MessageModel = require('../Models/MessageModel')
 const ChatModel = require('../Models/ChatSchema');
 
+
 //create message
 app.post('/message', async (req, res) => {
-    const { chatId, senderId, text } = req.body
+
+    const { chatId, senderId, text } = req.body;
+
     const message = new MessageModel({
         chatId, senderId, text
     })
@@ -33,11 +36,12 @@ app.get('/getChatAndMessages/:firstId/:secondId', async (req, res) => {
         const messages = await MessageModel.find({ chatId: chat._id });
 
         // Combine chat details and messages and return as a single response
-        res.status(200).json({ messages });
+        res.status(200).json({ chatId: chat._id, messages });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 module.exports = app

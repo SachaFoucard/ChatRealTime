@@ -9,10 +9,9 @@ import OptionBtn from '../Widgets.jsx/OptionBtn'
 import { useNavigate } from 'react-router-dom'
 
 export default function NavUser() {
-    const { user, openInfo, setOpenInfo, setMe, onlineUsers } = useContext(UserContext)
+    const { user, openInfo, setOpenInfo, setMe } = useContext(UserContext)
     const navigate = useNavigate()
-    const [online,setOnline]=useState(false)
-  
+    
     const items = [
         {
             key: 5,

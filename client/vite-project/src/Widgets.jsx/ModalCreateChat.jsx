@@ -20,7 +20,7 @@ const ModalCreateChat = ({ isVisible, setIsVisible }) => {
         }
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:8000/api/getContacts/${me?._id}`);
+            const response = await fetch(`http://localhost:3000/api/getContacts/${me?._id}`);
             const data = await response.json();
             if (data) {
                 setContacts(data.Allcontacts);
@@ -34,7 +34,7 @@ const ModalCreateChat = ({ isVisible, setIsVisible }) => {
 
     const CreateChat = async (item) => {
         try {
-            const response = await fetch('http://localhost:8000/api/createChat', {
+            const response = await fetch('http://localhost:3000/api/createChat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

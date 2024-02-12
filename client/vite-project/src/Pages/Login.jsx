@@ -12,7 +12,7 @@ const Login = () => {
 
     const onFinish = async (values) => {
         try {
-            const data = await fetch('http://localhost:8000/api/login', {
+            const data = await fetch('http://localhost:3000/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

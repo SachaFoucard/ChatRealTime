@@ -26,7 +26,7 @@ export default function Messages() {
     }
     setLoading(true);
     try {
-      const data = await fetch(`http://localhost:8000/api/findChat/${me?._id}`);
+      const data = await fetch(`http://localhost:3000/api/findChat/${me?._id}`);
       const response = await data.json();
       if (response) {
         setContactsOpenChat(response);

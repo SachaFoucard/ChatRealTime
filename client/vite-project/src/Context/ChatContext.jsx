@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import { message } from 'antd';
 import { UserContext } from './UserContext';
 
 export const ChatContext = createContext();
@@ -9,46 +8,39 @@ export default function ChatContextProvider({ children }) {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
     const { me } = useContext(UserContext);
+    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-        const newSocket = io("http://localhost:5173");
+        const newSocket = io.connect('http://localhost:3000');
 
         newSocket.on('connect', () => {
-            message.success('Connected to the server');
+            console.log('Socket connected with ID:', newSocket.id);
         });
 
-        setSocket(newSocket);
-
-        return () => { newSocket.disconnect(); };
-    }, []);
-
-    useEffect(() => {
-        const storedUserData = sessionStorage.getItem('userData');
-        const initialUserData = storedUserData ? JSON.parse(storedUserData) : null;
-
-        if (!socket) return;
-
-        socket.emit('AddNewUser', initialUserData?._id);
-
-        socket.on('GetOnlineUsers', (res) => {
-            // Filter out the current user
-            setOnlineUsers(res);
+        newSocket.on('onlineUsers', (users) => {
+            setOnlineUsers(users);
         });
 
+        newSocket.on('receive_message', (data) => {
+            setMessages(prevMessages => [...prevMessages, data]);
+        });
+
+        // Clean up function to close the socket connection and remove event listeners
         return () => {
-            socket.off('GetOnlineUsers'); // Cleanup event listener
+            newSocket.off('onlineUsers');
+            newSocket.close();
         };
-    }, [socket]);
-
-    useEffect(() => {
-        console.log('onlineUsers', onlineUsers);
-    }, [onlineUsers]);
+    }, [me]);
 
     const value = {
-        onlineUsers,
-        socket
+        socket,
+        messages,
+        setMessages,
+        onlineUsers
     };
-
+{
+    console.log('onlineUsers',onlineUsers);
+}
     return (
         <ChatContext.Provider value={value}>
             {children}

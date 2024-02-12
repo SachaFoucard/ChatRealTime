@@ -22,7 +22,7 @@ const ProfilePicture = () => {
                 formData.append("image", file);
                 formData.append("_id", me?._id); // Add ID to the FormData
 
-                const response = await fetch("http://localhost:8000/api/add", {
+                const response = await fetch("http://localhost:3000/api/add", {
                     method: "POST",
                     body: formData,
                 });

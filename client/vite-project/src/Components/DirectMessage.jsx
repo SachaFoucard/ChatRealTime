@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Avatar, Divider, List, Skeleton } from 'antd';
+import { Avatar, Divider, List, Skeleton, Empty } from 'antd';
 import { PlusSquareTwoTone } from '@ant-design/icons'
 import { useContext } from 'react';
 import { UserContext } from '../Context/UserContext';
 import ModalCreateChat from '../Widgets.jsx/ModalCreateChat';
 
-const DirectMessage = ({GetChat,contactsOpenChat,hasMoreData}) => {
-    const { setUser,me } = useContext(UserContext);
+const DirectMessage = ({ GetChat, contactsOpenChat, hasMoreData }) => {
+    const { setUser, me } = useContext(UserContext);
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
     const handleSquareIconClick = () => {
@@ -16,7 +16,7 @@ const DirectMessage = ({GetChat,contactsOpenChat,hasMoreData}) => {
 
     useEffect(() => {
         GetChat()
-      }, [contactsOpenChat])
+    }, [])
 
     return (
         <>
@@ -33,41 +33,45 @@ const DirectMessage = ({GetChat,contactsOpenChat,hasMoreData}) => {
                     borderBottom: '1px solid rgba(140, 140, 140, 0.35)',
                 }}
             >
-                <InfiniteScroll
-                    dataLength={contactsOpenChat}
-                    next={GetChat}
-                    hasMore={hasMoreData} // Use state variable to determine if there's more data
-                    loader={
-                        <Skeleton
-                            avatar
-                            paragraph={{
-                                rows: 1,
-                            }}
-                            active
+                {contactsOpenChat.length > 0 ? (
+                    <InfiniteScroll
+                        dataLength={contactsOpenChat.length}
+                        next={GetChat}
+                        hasMore={hasMoreData} // Use state variable to determine if there's more data
+                        loader={
+                            <Skeleton
+                                avatar
+                                paragraph={{
+                                    rows: 1,
+                                }}
+                                active
+                            />
+                        }
+                        endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+                        scrollableTarget="scrollableDiv"
+                    >
+                        <List
+                            dataSource={contactsOpenChat}
+                            renderItem={(item) => (
+                                <List.Item key={item.mail} onClick={() => setUser(item)}>
+                                    <List.Item.Meta
+                                        avatar={item?.picture ? <Avatar src={item?.picture} /> : <Avatar
+                                            style={{
+                                                backgroundColor: '#808080',
+                                            }}
+                                        >
+                                            {item?.username.slice(0, 1)}
+                                        </Avatar>}
+                                        title={item.username}
+                                        description={item.mail}
+                                    />
+                                </List.Item>
+                            )}
                         />
-                    }
-                    endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-                    scrollableTarget="scrollableDiv"
-                >
-                    <List
-                        dataSource={contactsOpenChat}
-                        renderItem={(item) => (
-                            <List.Item key={item.mail} onClick={() => setUser(item)}>
-                                <List.Item.Meta
-                                    avatar={item?.picture ? <Avatar src={item?.picture} /> : <Avatar
-                                        style={{
-                                            backgroundColor: '#808080',
-                                        }}
-                                    >
-                                        {item?.username.slice(0, 1)}
-                                    </Avatar>}
-                                    title={item.username}
-                                    description={item.mail}
-                                />
-                            </List.Item>
-                        )}
-                    />
-                </InfiniteScroll>
+                    </InfiniteScroll>
+                ) : (
+                    <Empty description="No contacts to display" />
+                )}
             </div>
             <ModalCreateChat isVisible={isModalVisible} setIsVisible={setIsModalVisible} />
         </>

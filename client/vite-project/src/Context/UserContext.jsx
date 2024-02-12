@@ -16,10 +16,6 @@ export default function UserContextProvider({ children }) {
 
   const [me, setMe] = useState(null)
 
-  const [onlineUsers, setOnlineUsers] = useState([]);
-
-
-
   const value = {
     selectedFeature,
     setSelectedFeature,
@@ -29,7 +25,6 @@ export default function UserContextProvider({ children }) {
     openInfo,
     setMe,
     me,
-    setOnlineUsers, onlineUsers,
   }
 
   useEffect(() => {

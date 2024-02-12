@@ -25,7 +25,7 @@ const MyForm = () => {
 
     const onFinish = async (values) => {
         try {
-            const response = await fetch(`http://localhost:8000/api/update/${me._id}`, {
+            const response = await fetch(`http://localhost:3000/api/update/${me._id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

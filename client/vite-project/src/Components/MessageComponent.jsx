@@ -1,11 +1,50 @@
-import React, { useContext, useState } from 'react';
-import { Input, Button, List, Avatar, Space } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { Input, Button, List, Avatar, Space, message } from 'antd';
 import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import { UserContext } from '../Context/UserContext';
+import { ChatContext } from '../Context/ChatContext';
 
-function MessagesComponent({ messages, user }) {
-    const { me } = useContext(UserContext);
+function MessagesComponent({ messages, chatId }) {
+    const { me, user } = useContext(UserContext);
+    const { socket, setMessages } = useContext(ChatContext)
+    const [inputMessage, setInputMessage] = useState('');
+
     const [favorites, setFavorites] = useState([]);
+
+    const sendMessage = async () => {
+        try {
+            if (!inputMessage.trim()) {
+                return; // If input message is empty, do nothing
+            }
+    
+            // Send message via WebSocket
+            socket.emit("join_room", chatId);
+            socket.emit('send_message', { message: inputMessage, room: chatId });
+    
+            // Send message via HTTP request to save it in the database
+            const response = await fetch('http://localhost:3000/api/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chatId,
+                    senderId: me._id,
+                    text: inputMessage
+                })
+            });
+    
+            const responseData = await response.json();
+    
+            // Update the messages state with the newly saved message
+            setMessages(prevMessages => [...prevMessages, responseData]);
+            setInputMessage('');
+        } catch (error) {
+            console.error(error);
+            message.error('Failed to send message');
+        }
+    };
+
 
     const toggleFavorite = (messageId) => {
         if (favorites.includes(messageId)) {
@@ -14,6 +53,7 @@ function MessagesComponent({ messages, user }) {
             setFavorites([...favorites, messageId]);
         }
     };
+   
 
     return (
         <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -26,7 +66,7 @@ function MessagesComponent({ messages, user }) {
                         const profilPic = fromMe ? me?.picture : user.picture;
 
                         return (
-                            <List.Item style={{alignContent : fromMe ? 'right' : 'left'}}>
+                            <List.Item style={{ alignContent: fromMe ? 'right' : 'left' }}>
                                 <List.Item.Meta
                                     avatar={<Avatar src={profilPic} shape="square" />}
                                     title={
@@ -54,8 +94,8 @@ function MessagesComponent({ messages, user }) {
                 />
             </div>
             <div style={{ padding: '10px' }}>
-                <Input placeholder="Type your message..." />
-                <Button type="primary" style={{ marginTop: '10px' }}>Send</Button>
+                <Input placeholder="Type your message..." onChange={(e) => setInputMessage(e.target.value)} />
+                <Button onClick={() => sendMessage()} type="primary" style={{ marginTop: '10px' }}>Send</Button>
             </div>
         </div>
     );

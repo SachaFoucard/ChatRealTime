@@ -9,13 +9,13 @@ import ModalAddContact from '../Widgets.jsx/ModalAddContact'
 export default function Contacts() {
 
   const [data, setData] = useState([]);
-  const { me, setOnlineUsers, onlineUsers } = useContext(UserContext)
+  const { me } = useContext(UserContext)
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
 
   const appendData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/getContacts/${me?._id}`);
+      const response = await fetch(`http://localhost:3000/api/getContacts/${me?._id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

@@ -17,7 +17,7 @@ const FavoritesMess = () => {
         }
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:8000/api/favoritesContacts/${me?._id}`);
+            const response = await fetch(`http://localhost:3000/api/favoritesContacts/${me?._id}`);
             const body = await response.json();
             setData(body.ArrayUsers);
         } catch (error) {

@@ -9,7 +9,7 @@ import { UserContext } from '../Context/UserContext';
 const ContainerHeight = 500;
 
 const Person = ({ appendData, data }) => {
-    const { setUser, me, user } = useContext(UserContext)
+    const { setUser } = useContext(UserContext)
 
     const items = [
         {
