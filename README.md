@@ -1,7 +1,7 @@
-<img width="865" alt="chatPlatform" src="https://github.com/SachaFoucard/ChatStack-Platform-Real-Time/assets/94567706/ee12aa05-ebb2-48ce-8223-7d06c8281fcd">
-
+https://github.com/SachaFoucard/ChatStack-Platform-Real-Time/assets/94567706/ef143bfc-ec19-4f1e-a540-29dca2580189
 
 Description:
+
 The RealTime Chat Platform is a modern and efficient communication tool built to facilitate seamless real-time messaging and collaboration among users. Leveraging the power of Node.js, React.js, Ant Design, Mongoose, Socket.io, and AWS S3 for picture storage, this project provides a feature-rich chat application reminiscent of popular platforms like Slack and Microsoft Teams.
 
 Key Features:
