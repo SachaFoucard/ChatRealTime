@@ -178,18 +178,23 @@ route.get('/getContacts/:id', async (req, res) => {
     const contacts = user.contacts || [];
     for (let i = 0; i < contacts.length; i++) {
       const userContact = await User.findOne({ _id: contacts[i]?._id });
-      if (userContact.picture != '') {
+      if (!userContact) {
+        console.log(`User contact not found for ID: ${contacts[i]?._id}`);
+        continue; // Skip to the next iteration
+      }
+      if (userContact.picture != '' ) {
         const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.BUCKET_NAME, Key: userContact.picture }, { expiresIn: expiration }));
         userContact.picture = url
       }
-      Allcontacts.push(userContact)
+      Allcontacts.push(userContact);
     }
     return res.status(200).json({ Allcontacts });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal Server Error' });
   }
-})
+});
+
 
 
 route.get('/searchUser/:input', async (req, res) => {

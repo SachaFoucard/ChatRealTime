@@ -16,11 +16,12 @@ function MessagesComponent({ messages, chatId }) {
             if (!inputMessage.trim()) {
                 return; // If input message is empty, do nothing
             }
-    
+            console.log('socket', socket);
+
             // Send message via WebSocket
             socket.emit("join_room", chatId);
             socket.emit('send_message', { message: inputMessage, room: chatId });
-    
+
             // Send message via HTTP request to save it in the database
             const response = await fetch('http://localhost:3000/api/message', {
                 method: 'POST',
@@ -33,9 +34,9 @@ function MessagesComponent({ messages, chatId }) {
                     text: inputMessage
                 })
             });
-    
+
             const responseData = await response.json();
-    
+
             // Update the messages state with the newly saved message
             setMessages(prevMessages => [...prevMessages, responseData]);
             setInputMessage('');
@@ -53,7 +54,7 @@ function MessagesComponent({ messages, chatId }) {
             setFavorites([...favorites, messageId]);
         }
     };
-   
+
 
     return (
         <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>

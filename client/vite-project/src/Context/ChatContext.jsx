@@ -15,19 +15,15 @@ export default function ChatContextProvider({ children }) {
 
         newSocket.on('connect', () => {
             console.log('Socket connected with ID:', newSocket.id);
+            setSocket(newSocket)
         });
-
-        newSocket.on('onlineUsers', (users) => {
-            setOnlineUsers(users);
-        });
-
+      
         newSocket.on('receive_message', (data) => {
             setMessages(prevMessages => [...prevMessages, data]);
         });
 
         // Clean up function to close the socket connection and remove event listeners
         return () => {
-            newSocket.off('onlineUsers');
             newSocket.close();
         };
     }, [me]);
@@ -38,9 +34,7 @@ export default function ChatContextProvider({ children }) {
         setMessages,
         onlineUsers
     };
-{
-    console.log('onlineUsers',onlineUsers);
-}
+
     return (
         <ChatContext.Provider value={value}>
             {children}

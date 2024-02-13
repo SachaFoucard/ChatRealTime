@@ -15,12 +15,7 @@ const onlineUsers = new Map();
 
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
-
-    socket.on('login', (userId) => {
-        onlineUsers.set(socket.id, userId);
-        // Broadcast the updated online users list to all clients
-        io.emit('onlineUsers', Array.from(onlineUsers.values()));
-    });
+   
 
     socket.on("join_room", (data) => {
         socket.join(data)
