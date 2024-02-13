@@ -11,6 +11,7 @@ User Authentication: Secure user authentication system powered by Node.js ensure
 Rich User Interface: Developed with React.js and Ant Design, the platform boasts an intuitive and visually appealing user interface, enhancing user experience.
 Database Integration: Mongoose is employed for seamless integration with MongoDB, allowing efficient storage and retrieval of chat data and user information.
 Scalability: Built with scalability in mind, the platform can handle a large number of concurrent users and messages, ensuring smooth performance under heavy loads.
+
 Technologies Used:
 
 Frontend: React.js, Ant Design
